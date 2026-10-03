@@ -1,6 +1,6 @@
-# Setup: ChatGPT Project sources and independent research (manual)
+# Setup: ChatGPT Project sources and independent research
 
-Registering Project sources is separate from installing the skill. Neither implies the other, and this repository cannot observe either; it prepares exact files and records what you observed.
+Registering Project sources is separate from installing the skill; neither implies the other. The helper prepares exact files and records what was observed; it does not call any Project API. Uploading can be done by you or, where your host already supports adding files to an existing Project, by the host on your behalf. Either way, confirm the result by observing the Project's source list.
 
 ## 1. Choose the task kind and files
 
@@ -12,8 +12,8 @@ The plan lists exact filenames in `project-sources/`, their SHA-256, the pinned 
 
 ## 2. Create a project-scoped workspace
 
-1. Create a Project for one domain, for example `<PROJECT_LABEL>`.
-2. Upload exactly the routed files, keeping their names.
+1. Create a Project for one domain, for example `<PROJECT_LABEL>`, or reuse an existing one.
+2. Add exactly the routed files, keeping their names (yourself or host-assisted where supported).
 3. Optional Project instructions: cite `filename > nested path:line`, say *inconclusive* when a source is missing or fails to load.
 
 Use conversations in that Project for independent research or domain review: give each one question, the allowed sources and the expected output, and bring back only the answer with citations. Separate Projects keep unrelated sources out of each other's context.

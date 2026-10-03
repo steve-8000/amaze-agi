@@ -1,34 +1,39 @@
 # Memory
 
-Memory (GBrain or another connected store) holds what helps future work: the user's decisions and preferences, project facts, and language- or tool-specific lessons from real successes and failures. It is context, never permission: a remembered "allowed" does not authorize an action today.
+Memory (GBrain or another connected store) holds what helps future work: the user's preferences and decisions, project facts and records, and language- or tool-specific lessons from real successes and failures. It is context, never permission: a remembered "allowed" does not authorize an action today.
 
-## What a memory entry carries
+## What to keep
 
-- **Claim**: one fact, decision or lesson in a sentence.
+- **Atomic entries**: one fact, preference, decision or lesson.
+- **Records**: a coherent, sourced summary of a decision or project state (what was decided, why, alternatives rejected, open items), linked to its sources. Prefer one maintained record over many fragments.
+- Not raw transcripts, mailbox exports or chat dumps.
+
+Each entry or record carries:
+
 - **Source**: where it came from (message, document, commit, run receipt) with a link or reference.
 - **Date**: when it was observed, and when it was last confirmed.
 - **Scope**: which project, language, tool or person it applies to.
-- **Confidence**: stated by the user, observed in a run, or inferred.
+- **Confidence and authority**: decided by the user, stated in an authoritative document or system, observed in a run, or inferred.
 
 Entries without a source or scope are hints, not facts.
 
 ## Retrieval
 
 1. Query for the current job's scope only; prefer a few precise searches over one broad dump.
-2. Build a small context pack: the entries that change a decision, each with source and date. Drop duplicates and anything off-scope.
+2. Build a small context pack: the entries and records that change a decision, each with source and date. Drop duplicates and anything off-scope.
 3. Hand workers the pack, not the raw store.
-4. When an entry conflicts with a current source, the current source wins; note the conflict.
-5. Old entries about fast-moving things (versions, prices, people's roles, APIs) are checked against a live source before use.
+4. Before relying on a current-state fact (versions, configuration, ownership, prices, people's roles, APIs), confirm it against the relevant authoritative live source.
+5. When sources conflict, weigh authority and fit before recency: a user decision or the system of record outranks a newer but weaker note. Keep both with their provenance, state the conflict, and ask the user only when the conflict changes the outcome and the sources cannot settle it.
 
 ## Writing and correcting
 
-- Save only material items: a decision the user made, a failure with its cause, a lesson that will change future work. Not chat summaries.
+- Save material items as they occur, not only at the end of a job or when asked: decisions the user made, blockers and their cause, findings that change the plan, lessons that will change future work.
 - Include the source, date, scope and confidence fields above.
-- When something changes, update or supersede the old entry rather than adding a contradicting one, and keep the reason.
-- After every write, read the entry back and confirm it says what was intended. If the readback differs, fix it before reporting done.
+- When something changes, update or supersede the old entry or record rather than adding a contradicting one, and keep the reason.
+- After every write, read it back and confirm it says what was intended. If the readback differs or the write cannot be confirmed, fix it or report it as unsaved.
 
 ## Boundaries
 
 - Personal knowledge stays in the user's private store; this public package contains none.
-- Do not bulk-import mailboxes or chat histories; save what the job produced or the user asked to keep.
-- Do not rely on background capture or hooks; memory is written deliberately at the end of a job or when the user asks.
+- Do not bulk-import mailboxes or chat histories; save what the job produced or what the user asked to keep.
+- Do not rely on background capture or hooks; memory is written deliberately by the job that has the information.

@@ -22,6 +22,16 @@ A higher level never follows from a lower one. A correct quote of unused code sa
 - Several models agreeing is not a check. Resolve disagreement with a source or a run.
 - Use the smallest checks that cover the real risk, plus the actual user flow when one exists.
 
+## Reuse instead of re-running
+
+Evidence stays valid while the immutable artifact, the criterion it supports, the scope and the relevant environment are unchanged. After a revision or a new phase:
+
+1. List each existing item with its ID and ask whether those four still apply.
+2. If they do, re-bind it: reference the earlier evidence ID and note why it still applies. Do not re-run an unchanged broad check.
+3. If one changed, re-check only the claims it affects.
+
+With the helper, re-binding is `evidence record` with `"reuses": "<ev_id>"` under the current revision. The helper checks the ID exists for this goal; judging applicability is the caller's review, not something it computes.
+
 ## Closing
 
-Close only when every finish-line item has current evidence under the latest user-approved revision, no task is open and no unknown outcome is unreconciled. Report verified, attested and unverified items separately.
+Close only when every finish-line item has current evidence under the latest revision the user set, the tasks this goal needs (including its dependencies) are finished, and no unknown outcome of this goal is unreconciled. Unrelated jobs do not block closure. Report verified, attested and unverified items separately.

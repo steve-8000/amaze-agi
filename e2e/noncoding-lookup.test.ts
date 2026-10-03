@@ -10,7 +10,7 @@ const QUOTE =
   "| LCP, INP, CLS at p75 | Field | User-outcome Core Web Vitals; use for pass/fail prioritization |";
 
 // Rehearses examples/noncoding-lookup through the real CLI with pinned sources; no executor involved.
-test("noncoding lookup: routed source, exact quote, approved criteria, readback closure", () => {
+test("noncoding lookup: routed source, exact quote, request-bound criteria, readback closure", () => {
   const project = fs.mkdtempSync(path.join(os.tmpdir(), "amaze-e2e-lookup-"));
   fs.writeFileSync(path.join(project, ".gitignore"), ".amaze-agi/\n");
 
@@ -30,26 +30,10 @@ test("noncoding lookup: routed source, exact quote, approved criteria, readback 
   ]);
 
   const created = cli(project, ["goal", "create", "--file", path.join(EX, "goal.json")]).json as {
-    approve: string;
+    inEffect: number | null;
   };
-
+  expect(created.inEffect).toBe(1);
   fs.copyFileSync(path.join(EX, "decision.example.md"), path.join(project, "decision.md"));
-  const unapproved = cli(project, ["goal", "close", "report-basis"]);
-  expect(unapproved.code).toBe(1);
-  expect(unapproved.stderr).toContain("not approved");
-
-  const selfApproval = cli(project, [
-    "goal",
-    "approve",
-    "report-basis",
-    "1",
-    "--confirmation",
-    "looks good, approved",
-  ]);
-  expect(selfApproval.code).toBe(1);
-  expect(
-    cli(project, ["goal", "approve", "report-basis", "1", "--confirmation", `yes, ${created.approve}`]).code,
-  ).toBe(0);
   const quote = (anchor: string) =>
     cli(project, [
       "evidence",

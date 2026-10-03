@@ -2,7 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { GBrainContext } from "./adapters/gbrain.ts";
 import { defaultProfile, loadProfile, PROFILE_FILE, resolveHome } from "./config.ts";
-import { approvalPhrase, Engine, effectiveRevision } from "./core/engine.ts";
+import { Engine, effectiveRevision } from "./core/engine.ts";
 import { AmazeError, fail } from "./core/errors.ts";
 import { lookupGoal, lookupTarget, lookupTask } from "./core/identity.ts";
 import { defaultDeps, isCanonicalId, type SessionRef } from "./core/ids.ts";
@@ -26,9 +26,10 @@ import { verifySources } from "./sources/index.ts";
 const USAGE = `amaze-agi — evidence helper for dot jobs (it records and checks; it never executes work)
 
   init | doctor [--no-probe] | status [ref]
-  goal create --file goal.json | goal show <ref> | goal cancel <ref> --reason R
+  goal create --file goal.json   (a "request" field binds revision 1; without it r1 waits for the user's decision)
+  goal show <ref> | goal cancel <ref> --reason R
   goal propose <ref> --file criteria.json --reason R      (proposed criteria do not take effect)
-  goal approve <ref> <revision> --confirmation "<user reply containing 'approve rN hash8'>"
+  goal approve <ref> <revision> --user-reply "<the user's decision, quoted or referenced>"   (caller-attested)
   goal close <ref>                                        (exit 3 while the finish line is not met)
   task add <goal> --file task.json | task claim <task> --owner O | task complete <task>
   target declare <canonical> | alias bind <goal|task|target> <alias> <canonical>
@@ -39,7 +40,7 @@ const USAGE = `amaze-agi — evidence helper for dot jobs (it records and checks
   evidence quote <goal> --quote Q --anchor anchor.json --claim C [--scope text_present|attribution|defect|runtime_behavior|reasoning]
   delivery upload <goal> <file> --dest D --status succeeded|failed|unknown --detail D [--remote-ref R] [--server-sha256 H]
   delivery attach <id> --container C --status succeeded|failed|unknown --detail D [--listed]
-  delivery reconcile <id> --part upload (--found [--server-sha256 H] | --not-found) | --part attach (--listed | --not-listed)
+  delivery reconcile <id> --part upload (--found [--server-sha256 H] | --not-found) | --part attach (--listed | --found | --not-found)
   research plan <taskKind> | research excerpt <file> <section> [--lines A-B] | research status [--task-kind K]
   context gbrain (search|get) <query>
   sources verify | plugin verify
@@ -171,7 +172,7 @@ export async function main(
         const e = engine();
         if (sub === "create") {
           const goal = e.createGoal(parseCreateGoal(readJson(flag(args, "file"))), by);
-          out({ goal, approve: goal.revisions.map(approvalPhrase)[0] });
+          out({ goal, inEffect: effectiveRevision(goal)?.revision ?? null });
         } else if (sub === "show") {
           const goal = e.lookupGoal(arg(args, 2, "ref"));
           out(goal ? { found: true, goal, evidence: e.currentEvidence(goal.id) } : { found: false });
@@ -182,11 +183,11 @@ export async function main(
             flag(args, "reason"),
             by,
           );
-          out({ revision, approve: approvalPhrase(revision) });
+          out({ revision, note: "takes effect only after the user decides; record it with goal approve" });
         } else if (sub === "approve") {
           const rev = Number(arg(args, 3, "revision"));
           if (!Number.isInteger(rev)) fail("invalid", "revision must be an integer");
-          out(e.approveCriteria(arg(args, 2, "ref"), rev, flag(args, "confirmation")));
+          out(e.approveCriteria(arg(args, 2, "ref"), rev, flag(args, "user-reply"), by));
         } else if (sub === "cancel") out(e.cancelGoal(arg(args, 2, "ref"), flag(args, "reason")));
         else if (sub === "close") {
           const result = await e.closeGoal(arg(args, 2, "ref"), policy(), by);
@@ -310,7 +311,7 @@ export async function main(
             e.recordAttach(id, {
               status: outcomeStatus(flag(args, "status")),
               container: flag(args, "container"),
-              readbackListed: args.flags.listed === true,
+              listed: args.flags.listed === true,
               detail: flag(args, "detail"),
             }),
           );
@@ -332,13 +333,13 @@ export async function main(
               }),
             );
           } else if (part === "attach") {
-            const listed =
-              args.flags.listed === true
+            const found =
+              args.flags.listed === true || args.flags.found === true
                 ? true
-                : args.flags["not-listed"] === true
+                : args.flags["not-found"] === true
                   ? false
-                  : fail("invalid", "--listed or --not-listed");
-            out(e.reconcileDelivery(id, { part: "attach", listed }));
+                  : fail("invalid", "--listed, --found or --not-found");
+            out(e.reconcileDelivery(id, { part: "attach", found, listed: args.flags.listed === true }));
           } else fail("invalid", "--part upload|attach");
         } else fail("invalid", `unknown delivery subcommand ${sub}`);
         return 0;

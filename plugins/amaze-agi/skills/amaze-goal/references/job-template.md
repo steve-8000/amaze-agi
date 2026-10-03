@@ -10,7 +10,7 @@ Constraints:   deadlines, budget, approvals, things not to touch
 Sources:       memory? routed task kind? web? independent review? none?
 Execution:     connector and exact target, or "none (answer only)"
 Reporting:     format, language, where it is delivered
-Revision:      r1 (proposed) -> approved by the user's reply
+Revision:      r1 = the user's request (quote or reference it); later revisions need the user's decision
 ```
 
 ## Choosing jobs
@@ -28,6 +28,9 @@ Each parallel job states: question, allowed sources, budget (sources, time), exp
 
 ## Finish line rules
 
+- When the request is unambiguous, record it as r1 with where it came from (the user's message, quoted or referenced) and start. Ask only when outcome, scope or finish line is genuinely open.
 - Every finish-line item names how it is read back (file hash, HTTP status, listing, receipt).
 - A connector receipt is reported as *attested*, distinct from a check you ran.
-- Revisions are proposed as `rN` with the full new text; they take effect only after the user replies with explicit approval. Evidence from an older revision is stale until re-checked.
+- A material change to outcome or finish line (dropping, weakening or replacing an item) is proposed with the full new text and takes effect only after the user decides. Wording fixes that do not change what counts as done need no new revision.
+- Record who decided and in which message. That record is context you attest to; it is not authentication and not permission to execute anything.
+- After a revision, re-bind evidence that still applies and re-check only what the change affects ([evidence](evidence.md)).

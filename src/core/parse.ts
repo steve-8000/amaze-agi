@@ -110,6 +110,7 @@ export function parseCreateGoal(v: unknown): CreateGoalInput {
       maxRunsTotal: posInt(budget.maxRunsTotal, "budget.maxRunsTotal"),
       deadline: budget.deadline === undefined ? undefined : posInt(budget.deadline, "budget.deadline"),
     },
+    request: optStr(v.request, "request"),
     alias: optStr(v.alias, "alias"),
   };
 }
@@ -202,5 +203,6 @@ export function parseEvidenceInput(goal: string, v: unknown): EvidenceInput {
     status,
     level: v.level === "read_observed" ? "read_observed" : "claimed",
     observed: optStr(v.observed, "observed"),
+    reuses: optStr(v.reuses, "reuses"),
   };
 }

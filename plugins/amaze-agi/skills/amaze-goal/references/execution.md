@@ -13,9 +13,11 @@ Execution happens only through connectors and tools that already exist (for codi
 
 [model-preferences.json](model-preferences.json) holds editable defaults: a strong model for core design and complex decisions, lighter models for supporting research, review and routine implementation from a settled handoff, and an escalation model used only when specifically justified. A model being listed by a provider does not prove it is available to this account, nor anything about its price or quality. Replace the defaults with your own.
 
-## Handoff
+To change model or thinking level between phases, use a setting the host actually supports, then read the active value back before work continues. If the change cannot be applied or confirmed, keep the current session and say so rather than starting new sessions to work around it.
 
-A handoff is self-contained: goal and finish line, exact target, inputs and sources, constraints, the existing check to run, and the expected report (result, readback, commit or artifact hash). Record what was sent, to which executor, and when.
+## Phase handoff
+
+Move between plan, execution, review and delivery with an explicit handoff. A handoff is self-contained: goal and finish line, exact target, inputs and sources, constraints, the existing check to run, and the expected report (result, readback, commit or artifact hash). Record what was sent, to which executor, and when. The receiving phase starts from the handoff, not from the sender's conversation.
 
 ## Outcomes
 
@@ -27,3 +29,7 @@ A handoff is self-contained: goal and finish line, exact target, inputs and sour
 | Cancelled by the user | stop dependent dispatch; report the state |
 
 No connector here offers exactly-once delivery across hosts. A late reply after reconciliation is recorded as an observation, not a new result.
+
+## Closing worker sessions
+
+Close a worker session you started once its outcome evidence (commit or artifact SHA, receipt), any needed handoff and any memory write are secured and read back. Do not close sessions the user owns, sessions unrelated to this job, or work whose outcome is still UNKNOWN.

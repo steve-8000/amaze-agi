@@ -1,6 +1,7 @@
 {
   "title": "Reject invalid ports in the fixture",
   "alias": "ports",
+  "request": "User message in this conversation: make parsePort in the fixture reject invalid ports, change only src/port.ts, and prove it with the existing check.",
   "scope": "Change only src/port.ts in the fixture repository. Do not edit check.ts.",
   "desiredOutcome": "parsePort accepts integers 0-65535 and throws for everything else, proven by the existing check.",
   "criteria": [

@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { approvalPhrase, Engine, isAmazeError } from "../src/core/engine.ts";
+import { Engine, isAmazeError } from "../src/core/engine.ts";
 import { sequentialDeps } from "../src/core/ids.ts";
 import type { ReadbackPolicy } from "../src/core/readback.ts";
 import { readState } from "../src/core/store.ts";
 import { assessClaim, validateQuote } from "../src/research/quote.ts";
-import { AGENT, approveInitial, fsSnapshot, goalSpec, HUMAN, tmpDir } from "./helpers.ts";
+import { AGENT, fsSnapshot, goalSpec, HUMAN, tmpDir } from "./helpers.ts";
 
 function setup() {
   const dir = tmpDir();
@@ -37,7 +37,6 @@ describe("focused regressions", () => {
   test("gates act on the canonical task an alias resolves to at that moment", () => {
     const { dir, engine } = setup();
     const goal = engine.createGoal(goalSpec(dir), HUMAN);
-    approveInitial(engine, goal);
     const mine = engine.addTask(goal.id, {
       title: "mine",
       budget: { maxRuns: 2 },
@@ -75,7 +74,6 @@ describe("focused regressions", () => {
   test("a readback mismatch keeps the goal open", async () => {
     const { dir, engine, policy } = setup();
     const goal = engine.createGoal(goalSpec(dir), HUMAN);
-    approveInitial(engine, goal);
     fs.writeFileSync(path.join(dir, "itinerary.md"), "Hotel: somewhere\n");
     const result = await engine.closeGoal(goal.id, policy, HUMAN);
     expect(result.closed).toBe(false);
@@ -83,24 +81,49 @@ describe("focused regressions", () => {
     expect(engine.lookupGoal(goal.id)?.status).toBe("open");
   });
 
-  test("criteria changes need the user's exact phrase and make older evidence stale", async () => {
+  test("an unambiguous request binds r1; open scope and later material changes wait for a recorded user decision", async () => {
     const { dir, engine, policy } = setup();
-    const goal = engine.createGoal(goalSpec(dir), HUMAN);
-    expect(code(() => engine.approveCriteria(goal.id, 1, "approved, go ahead"))).toBe("invalid");
-    approveInitial(engine, goal);
     const source = { kind: "human_observation" as const, uri: "note:itinerary" };
-    engine.recordEvidence(
-      {
-        goal: goal.id,
-        criteriaRevision: 1,
-        source,
-        claimKind: "reasoning",
-        claim: "lodging chosen",
-        status: "supported",
-        level: "claimed",
-      },
-      AGENT,
-    );
+    const evidence = (criteriaRevision: number, reuses?: string) =>
+      engine.recordEvidence(
+        {
+          goal: "trip",
+          criteriaRevision,
+          source,
+          claimKind: "reasoning",
+          claim: "lodging chosen",
+          status: "supported",
+          level: "claimed",
+          reuses,
+        },
+        AGENT,
+      );
+
+    const open = engine.createGoal(goalSpec(dir, { request: undefined, alias: "open" }), HUMAN);
+    expect(
+      code(() =>
+        engine.recordEvidence(
+          {
+            goal: open.id,
+            criteriaRevision: 1,
+            source,
+            claimKind: "reasoning",
+            claim: "x",
+            status: "supported",
+            level: "claimed",
+          },
+          AGENT,
+        ),
+      ),
+    ).toBe("stale_criteria");
+    expect(code(() => engine.approveCriteria(open.id, 1, " ", AGENT))).toBe("invalid");
+    expect(engine.approveCriteria(open.id, 1, "user: yes, that scope", AGENT).decision).toMatchObject({
+      kind: "user_decision",
+    });
+
+    const goal = engine.createGoal(goalSpec(dir, { alias: "trip" }), HUMAN);
+    expect(goal.revisions[0]?.decision).toMatchObject({ kind: "user_request", recordedBy: HUMAN });
+    const first = evidence(1);
 
     fs.writeFileSync(path.join(dir, "itinerary.md"), "Lodging: inn\n");
     const r2 = engine.proposeCriteria(
@@ -116,39 +139,20 @@ describe("focused regressions", () => {
       AGENT,
     );
     const pending = await engine.closeGoal(goal.id, policy, AGENT);
-    expect(pending.closed).toBe(false);
-    expect(pending.revision).toBe(1);
-    expect(pending.reason).toContain("awaits user approval");
-    expect(code(() => engine.approveCriteria(goal.id, 1, approvalPhrase(goal.revisions[0] ?? r2)))).toBe(
-      "conflict",
-    );
+    expect(pending).toMatchObject({ closed: false, revision: 1 });
+    expect(pending.reason).toContain("awaits the user's decision");
+    expect(code(() => engine.approveCriteria(goal.id, 1, "user: ok", AGENT))).toBe("conflict");
 
-    engine.approveCriteria(goal.id, 2, `user: ${approvalPhrase(r2)}`);
-    const { current, stale } = engine.currentEvidence(goal.id);
-    expect(current).toEqual([]);
-    expect(stale.map((e) => e.criteriaRevision)).toEqual([1, 1]);
-    expect(
-      code(() =>
-        engine.recordEvidence(
-          {
-            goal: goal.id,
-            criteriaRevision: 1,
-            source,
-            claimKind: "reasoning",
-            claim: "old",
-            status: "supported",
-            level: "claimed",
-          },
-          AGENT,
-        ),
-      ),
-    ).toBe("stale_criteria");
+    engine.approveCriteria(goal.id, r2.revision, "user: fine, use the easier bar", AGENT);
+    expect(engine.currentEvidence(goal.id).current).toEqual([]);
+    expect(code(() => evidence(1))).toBe("stale_criteria");
+    expect(code(() => evidence(2, "ev_999999"))).toBe("not_found");
+    expect(evidence(2, first.id)).toMatchObject({ criteriaRevision: 2, reuses: first.id });
   });
 
   test("an UNKNOWN outcome blocks retries until reconciled; late replies do not overwrite it", () => {
     const { dir, engine } = setup();
     const goal = engine.createGoal(goalSpec(dir), HUMAN);
-    approveInitial(engine, goal);
     const task = engine.addTask(goal.id, {
       title: "book",
       budget: { maxRuns: 3 },
@@ -178,7 +182,7 @@ describe("focused regressions", () => {
     expect(engine.recordHandoff(req).attempt).toBe(2);
   });
 
-  test("an UNKNOWN upload must be reconciled; a hash mismatch is never verified", () => {
+  test("delivery: unknown reconciles first, a hash mismatch fails, a connector receipt is accepted and can be attached", () => {
     const { dir, engine } = setup();
     const goal = engine.createGoal(goalSpec(dir), HUMAN);
     const file = path.join(dir, "out.md");
@@ -192,7 +196,7 @@ describe("focused regressions", () => {
         engine.recordAttach(unknown.id, {
           status: "succeeded",
           container: "thread",
-          readbackListed: true,
+          listed: true,
           detail: "x",
         }),
       ),
@@ -201,6 +205,32 @@ describe("focused regressions", () => {
       engine.reconcileDelivery(unknown.id, { part: "upload", found: true, serverSha256: "f".repeat(64) })
         .upload.phase,
     ).toBe("failed");
+
+    const accepted = engine.recordUpload(goal.id, file, "chat", {
+      status: "succeeded",
+      remoteRef: "file-1",
+      detail: "connector receipt",
+    });
+    expect(accepted.upload.phase).toBe("accepted");
+    const attachUnknown = engine.recordAttach(accepted.id, {
+      status: "unknown",
+      container: "thread",
+      listed: false,
+      detail: "lost",
+    });
+    expect(
+      code(() =>
+        engine.recordAttach(accepted.id, {
+          status: "succeeded",
+          container: "thread",
+          listed: false,
+          detail: "retry",
+        }),
+      ),
+    ).toBe("reconcile_required");
+    expect(
+      engine.reconcileDelivery(attachUnknown.id, { part: "attach", found: true, listed: false }).attach.phase,
+    ).toBe("accepted");
   });
 
   test("reasoning built on a verified quote stays qualified", async () => {

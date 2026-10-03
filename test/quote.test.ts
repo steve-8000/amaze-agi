@@ -6,15 +6,7 @@ import { sequentialDeps } from "../src/core/ids.ts";
 import { assessClaim, validateQuote } from "../src/research/quote.ts";
 import { recordQuoteEvidence } from "../src/research/record.ts";
 import { exportSectionMap, vendoredFilePath } from "../src/sources/index.ts";
-import {
-  approveInitial,
-  goalSpec,
-  HUMAN,
-  makeTreeRepo,
-  REPO_ROOT,
-  syntheticRepoFiles,
-  tmpDir,
-} from "./helpers.ts";
+import { goalSpec, HUMAN, makeTreeRepo, REPO_ROOT, syntheticRepoFiles, tmpDir } from "./helpers.ts";
 
 const repo = makeTreeRepo(syntheticRepoFiles());
 const git = (p: string, lines: [number, number]) => ({
@@ -118,7 +110,6 @@ describe("deterministic provenance on synthetic code", () => {
     const dir = tmpDir();
     const engine = new Engine(path.join(dir, "s"), sequentialDeps());
     const goal = engine.createGoal(goalSpec(dir), HUMAN);
-    approveInitial(engine, goal);
     const bad = await recordQuoteEvidence(
       engine,
       {

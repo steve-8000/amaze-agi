@@ -46,6 +46,11 @@ export interface CreateGoalInput {
   stopCriteria: string[];
   reporting: string;
   budget: GoalBudget;
+  /**
+   * The user's request that already fixes outcome and finish line, quoted or referenced. When present it
+   * binds revision 1; when absent revision 1 stays proposed until the user decides the open scope.
+   */
+  request?: string;
   alias?: string;
 }
 
@@ -73,6 +78,8 @@ export interface EvidenceInput {
   level: Extract<EvidenceLevel, "claimed" | "read_observed">;
   contentSha256?: string;
   observed?: string;
+  /** Earlier receipt of this goal re-bound here after the caller reviewed that it still applies. */
+  reuses?: string;
 }
 
 export interface HandoffRequest {
@@ -99,7 +106,7 @@ export interface CloseCheck {
 export interface CloseResult {
   closed: boolean;
   goalId: GoalId;
-  /** The user-approved revision the finish line was judged against. */
+  /** The user-decided revision the finish line was judged against. */
   revision: number;
   checks: CloseCheck[];
   evidence: EvidenceReceipt[];
@@ -117,8 +124,8 @@ export interface UploadReport {
 export interface AttachReport {
   status: "succeeded" | "failed" | "unknown";
   container: string;
-  /** True only when a readback listing of the container showed the uploaded object. */
-  readbackListed: boolean;
+  /** True only when a fresh listing of the container showed the uploaded object. */
+  listed: boolean;
   detail: string;
 }
 
@@ -146,14 +153,9 @@ export function criteriaHash(criteria: Criterion[]): string {
   return sha256Hex(Buffer.from(JSON.stringify(criteria), "utf8"));
 }
 
-/** Text the user must reply with (or include) to approve a revision; binds the exact criteria. */
-export function approvalPhrase(revision: CriteriaRevision): string {
-  return `approve r${revision.revision} ${revision.criteriaHash.slice(0, 8)}`;
-}
-
-/** The latest user-approved revision; proposed revisions never take effect on their own. */
+/** The latest revision the user set by request or decision; proposed revisions never take effect on their own. */
 export function effectiveRevision(goal: Goal): CriteriaRevision | undefined {
-  return [...goal.revisions].reverse().find((r) => r.approval !== undefined);
+  return [...goal.revisions].reverse().find((r) => r.decision !== undefined);
 }
 
 function validateSource(source: EvidenceSource): void {
@@ -203,6 +205,8 @@ export class Engine {
       if (input.budget.maxTasks < 1 || input.budget.maxRunsTotal < 1)
         fail("invalid", "budget limits must be >= 1");
       const criteria = normalizeCriteria(input.criteria);
+      const now = this.deps.now();
+      const request = input.request === undefined ? undefined : requireText(input.request, "request");
       const goal: Goal = {
         id: this.deps.newId("goal"),
         title: requireText(input.title, "title"),
@@ -217,13 +221,17 @@ export class Engine {
             criteria,
             criteriaHash: criteriaHash(criteria),
             reason: "initial",
-            at: this.deps.now(),
+            at: now,
             proposedBy: by,
+            decision:
+              request === undefined
+                ? undefined
+                : { kind: "user_request", reference: request, recordedBy: by, at: now },
           },
         ],
         status: "open",
         cancelLatched: false,
-        createdAt: this.deps.now(),
+        createdAt: now,
       };
       tx.put({ kind: "goal", value: goal });
       if (input.alias !== undefined)
@@ -232,7 +240,7 @@ export class Engine {
     });
   }
 
-  /** Proposes new criteria. They take effect only after `approveCriteria` with the user's confirmation. */
+  /** Proposes new criteria. They take effect only after `approveCriteria` records the user's decision. */
   proposeCriteria(
     goalRef: string,
     criteria: CriterionInput[],
@@ -256,24 +264,31 @@ export class Engine {
   }
 
   /**
-   * Records the user's approval of one exact revision. The confirmation must contain `approvalPhrase`.
-   * This is a consistency check on what the conversation relayed, not authentication of the user.
+   * Records the user's decision on the newest proposed revision. The reply is caller-attested context:
+   * the helper cannot authenticate the user, and the record grants no permission to execute anything.
    */
-  approveCriteria(goalRef: string, revisionNumber: number, confirmation: string): CriteriaRevision {
+  approveCriteria(
+    goalRef: string,
+    revisionNumber: number,
+    userReply: string,
+    by: SessionRef,
+  ): CriteriaRevision {
     return this.store.mutate("goal.approve_criteria", (tx) => {
       const goal = this.openGoal(tx.state, goalRef);
       const target =
         goal.revisions.find((r) => r.revision === revisionNumber) ??
         fail("not_found", `no revision ${revisionNumber}`);
-      if (target.approval) fail("conflict", `revision ${revisionNumber} already approved`);
+      if (target.decision) fail("conflict", `revision ${revisionNumber} already decided`);
       if (target.revision !== goal.revisions.at(-1)?.revision)
-        fail("conflict", "only the newest proposed revision can be approved");
-      if (!confirmation.toLowerCase().includes(approvalPhrase(target))) {
-        fail("invalid", `user confirmation must include "${approvalPhrase(target)}"`);
-      }
+        fail("conflict", "only the newest proposed revision can be decided");
       const approved: CriteriaRevision = {
         ...target,
-        approval: { by: "user", confirmation, at: this.deps.now() },
+        decision: {
+          kind: "user_decision",
+          reference: requireText(userReply, "user reply"),
+          recordedBy: by,
+          at: this.deps.now(),
+        },
       };
       tx.put({
         kind: "goal",
@@ -379,12 +394,19 @@ export class Engine {
       const goalId = resolveGoal(tx.state, input.goal);
       const goal = tx.state.goals[goalId] as Goal;
       const effective = effectiveRevision(goal);
-      if (!effective) fail("stale_criteria", "no user-approved criteria yet");
+      if (!effective) fail("stale_criteria", "no criteria set by the user's request or decision yet");
       if (input.criteriaRevision !== effective.revision) {
         fail(
           "stale_criteria",
-          `evidence targets criteria revision ${input.criteriaRevision}; approved revision is ${effective.revision}`,
+          `evidence targets criteria revision ${input.criteriaRevision}; current revision is ${effective.revision}`,
         );
+      }
+      let reuses: EvidenceId | undefined;
+      if (input.reuses !== undefined) {
+        const prior = isCanonicalId(input.reuses, "ev") ? tx.state.evidence[input.reuses] : undefined;
+        if (!prior || prior.goalId !== goalId)
+          fail("not_found", `unknown evidence ${input.reuses} for goal ${goalId}`);
+        reuses = prior.id;
       }
       if (input.criterionId !== undefined && !effective.criteria.some((c) => c.id === input.criterionId)) {
         fail("invalid", `unknown criterion ${input.criterionId}`);
@@ -414,6 +436,7 @@ export class Engine {
         level: input.level,
         contentSha256: input.contentSha256,
         observed: input.observed,
+        reuses,
         recordedAt: this.deps.now(),
         recordedBy: by,
       };
@@ -430,7 +453,7 @@ export class Engine {
       const goalId = resolveGoal(tx.state, receipt.goal);
       const effective =
         effectiveRevision(tx.state.goals[goalId] as Goal) ??
-        fail("stale_criteria", "no user-approved criteria yet");
+        fail("stale_criteria", "no criteria set by the user's request or decision yet");
       validateSource(receipt.source);
       const { goal: _ref, ...rest } = receipt;
       const value: EvidenceReceipt = {
@@ -457,7 +480,8 @@ export class Engine {
       if (goal.cancelLatched || goal.status === "cancelled")
         fail("cancelled", `goal ${goal.id} is cancelled`);
       if (goal.status !== "open") fail("conflict", `goal ${goal.id} is ${goal.status}`);
-      if (!effectiveRevision(goal)) fail("conflict", "criteria not approved by the user yet");
+      if (!effectiveRevision(goal))
+        fail("conflict", "criteria not set by the user's request or decision yet");
       if (TERMINAL_TASK[task.status]) fail("conflict", `task ${task.id} is ${task.status}`);
       if (task.owner !== undefined && task.owner !== req.session.sessionId)
         fail("not_owner", `task ${task.id} owned by ${task.owner}`);
@@ -638,7 +662,8 @@ export class Engine {
     const goalId = resolveGoal(state, goalRef);
     const goal = state.goals[goalId] as Goal;
     if (goal.status !== "open") fail("conflict", `goal ${goalId} is ${goal.status}`);
-    const effective = effectiveRevision(goal) ?? fail("conflict", "criteria not approved by the user yet");
+    const effective =
+      effectiveRevision(goal) ?? fail("conflict", "criteria not set by the user's request or decision yet");
     const local = await Promise.all(
       effective.criteria.map((c) =>
         c.readback.probe === "receipt" ? undefined : runReadback(c.readback, policy),
@@ -682,8 +707,7 @@ export class Engine {
       const failing = checks.filter((c) => c.status !== "supported").map((c) => c.criterionId);
       if (failing.length > 0) blockers.push(`readback not supported: ${failing.join(", ")}`);
       const latest = fresh.revisions.at(-1) as CriteriaRevision;
-      if (!latest.approval)
-        blockers.push(`revision ${latest.revision} awaits user approval ("${approvalPhrase(latest)}")`);
+      if (!latest.decision) blockers.push(`revision ${latest.revision} awaits the user's decision`);
       const openTasks = Object.values(tx.state.tasks).filter(
         (t) => t.goalId === goalId && !TERMINAL_TASK[t.status],
       );
@@ -717,7 +741,7 @@ export class Engine {
     });
   }
 
-  /** Evidence valid for the approved revision; older receipts are kept for audit only. */
+  /** Evidence bound to the current revision; older receipts are kept for audit and can be re-bound. */
   currentEvidence(goalRef: string): { current: EvidenceReceipt[]; stale: EvidenceReceipt[] } {
     const state = this.snapshot();
     const goalId = resolveGoal(state, goalRef);
@@ -730,8 +754,8 @@ export class Engine {
   }
 
   /**
-   * Records an artifact upload reported by the delivering connector. The local sha256 is computed from
-   * the exact bytes; the upload is verified only when the destination's readback hash matches.
+   * Records an upload reported by the delivering connector. The local sha256 fixes the exact source bytes;
+   * a matching destination hash makes the upload verified, a confirmed receipt without one makes it accepted.
    */
   recordUpload(goalRef: string, artifactPath: string, destination: string, report: UploadReport): Delivery {
     const bytes = fs.readFileSync(artifactPath);
@@ -750,7 +774,7 @@ export class Engine {
       let phase: Delivery["upload"]["phase"];
       if (report.status === "unknown") phase = "unknown";
       else if (report.status === "failed") phase = "failed";
-      else if (report.serverSha256 === undefined) phase = "unverified";
+      else if (report.serverSha256 === undefined) phase = "accepted";
       else phase = report.serverSha256.toLowerCase() === localSha256 ? "verified" : "failed";
       const value: Delivery = {
         id: this.deps.newId("dlv"),
@@ -775,22 +799,23 @@ export class Engine {
     });
   }
 
-  /** Attachment is a separate outcome; it needs a verified upload and a readback listing. */
+  /** Attachment is a separate outcome after a verified or accepted upload; a fresh listing makes it listed. */
   recordAttach(deliveryId: DeliveryId, report: AttachReport): Delivery {
     return this.store.mutate("delivery.attach", (tx) => {
       const d = tx.state.deliveries[deliveryId] ?? fail("not_found", `unknown delivery ${deliveryId}`);
-      if (d.upload.phase !== "verified")
+      if (d.upload.phase !== "verified" && d.upload.phase !== "accepted")
         fail(
           "conflict",
-          `delivery ${deliveryId} upload is ${d.upload.phase}; attach needs a verified upload`,
+          `delivery ${deliveryId} upload is ${d.upload.phase}; attach needs a verified or accepted upload`,
         );
       if (d.attach.phase === "unknown")
         fail("reconcile_required", `delivery ${deliveryId} attach is UNKNOWN; reconcile first`);
-      if (d.attach.phase === "verified") fail("conflict", `delivery ${deliveryId} already attached`);
+      if (d.attach.phase === "listed" || d.attach.phase === "accepted")
+        fail("conflict", `delivery ${deliveryId} already attached`);
       let phase: Delivery["attach"]["phase"];
       if (report.status === "unknown") phase = "unknown";
       else if (report.status === "failed") phase = "failed";
-      else phase = report.readbackListed ? "verified" : "unverified";
+      else phase = report.listed ? "listed" : "accepted";
       const value: Delivery = {
         ...d,
         attach: { phase, container: requireText(report.container, "container"), detail: report.detail },
@@ -800,12 +825,12 @@ export class Engine {
     });
   }
 
-  /** Resolves an UNKNOWN upload or attach from a readback; only then may another attempt be recorded. */
+  /** Resolves an UNKNOWN upload or attach from a lookup; only then may another attempt be recorded. */
   reconcileDelivery(
     deliveryId: DeliveryId,
     readback:
       | { part: "upload"; found: boolean; serverSha256?: string; remoteRef?: string }
-      | { part: "attach"; listed: boolean },
+      | { part: "attach"; found: boolean; listed: boolean },
   ): Delivery {
     return this.store.mutate("delivery.reconcile", (tx) => {
       const d = tx.state.deliveries[deliveryId] ?? fail("not_found", `unknown delivery ${deliveryId}`);
@@ -815,7 +840,7 @@ export class Engine {
         const phase: Delivery["upload"]["phase"] = !readback.found
           ? "failed"
           : readback.serverSha256 === undefined
-            ? "unverified"
+            ? "accepted"
             : ok
               ? "verified"
               : "failed";
@@ -836,8 +861,8 @@ export class Engine {
         ...d,
         attach: {
           ...d.attach,
-          phase: readback.listed ? "verified" : "failed",
-          detail: "reconciled by listing",
+          phase: !readback.found ? "failed" : readback.listed ? "listed" : "accepted",
+          detail: "reconciled",
         },
       };
       tx.put({ kind: "delivery", value });

@@ -1,8 +1,15 @@
 # Setup: make the skill available to dot
 
-The skill is `plugins/amaze-agi/skills/amaze-goal/` (entrypoint `SKILL.md`, frontmatter `name: amaze-goal`). It follows the Agent Skills layout and is packaged in a portable Agent Plugins folder. Installation is done in ChatGPT, by you or a workspace admin; this repository cannot install anything and `doctor` cannot see whether it is installed.
+The skill is `plugins/amaze-agi/skills/amaze-goal/` (entrypoint `SKILL.md`, frontmatter `name: amaze-goal`). It follows the Agent Skills layout and is packaged in a portable Agent Plugins folder. This repository and its helper do not install anything, and `doctor` cannot see whether the skill is installed.
 
-Availability, menu names and permissions depend on your plan and workspace settings. Check the current OpenAI documentation before following these steps:
+Keep four questions apart:
+
+- **Current capability**: if your dot host already supports writing a personal skill, it can add these files for you (host-assisted); otherwise use one of the options below.
+- **Eligibility**: whether skills or plugins are offered for your plan or workspace, per OpenAI's current documentation.
+- **Permissions**: workspace roles and policies decide who may upload, approve or import (some options need an owner or admin).
+- **User-only steps**: sign-in and any authorization the platform reserves for you; nobody else can complete those.
+
+Menu names and availability change; check the current documentation:
 
 - Skills: <https://help.openai.com/en/articles/20001066>
 - Plugins: <https://help.openai.com/en/articles/20001256>

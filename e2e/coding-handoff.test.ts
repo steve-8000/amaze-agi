@@ -34,8 +34,10 @@ test("coding handoff: routed quote, unknown outcome reconciled, readback, attest
   const before = sh(repo, ["bun", "check.ts"]);
   expect(before.code).toBe(1);
 
-  const created = run(["goal", "create", "--file", path.join(EX, "goal.json")]).json as { approve: string };
-  expect(run(["goal", "approve", "ports", "1", "--confirmation", `ok ${created.approve}`]).code).toBe(0);
+  const created = run(["goal", "create", "--file", path.join(EX, "goal.json")]).json as {
+    inEffect: number | null;
+  };
+  expect(created.inEffect).toBe(1);
   expect(run(["task", "add", "ports", "--file", path.join(EX, "task.json")]).code).toBe(0);
   const quote = run([
     "evidence",
@@ -181,7 +183,7 @@ test("coding handoff: routed quote, unknown outcome reconciled, readback, attest
     ["guard", "executed", "supported"],
     ["check", "attested", "supported"],
   ]);
-  expect(artifact.delivery).toMatchObject({ mismatch: "failed", upload: "verified", attach: "verified" });
+  expect(artifact.delivery).toMatchObject({ mismatch: "failed", upload: "verified", attach: "listed" });
   const out = writeArtifact("coding-handoff", artifact);
   expect(sha256Hex(fs.readFileSync(out.path))).toBe(out.sha256);
 });

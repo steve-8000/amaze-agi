@@ -1,9 +1,8 @@
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { approvalPhrase, type CreateGoalInput, type Engine } from "../src/core/engine.ts";
+import type { CreateGoalInput } from "../src/core/engine.ts";
 import type { SessionRef } from "../src/core/ids.ts";
-import type { Goal } from "../src/core/types.ts";
 
 export const REPO_ROOT = path.resolve(import.meta.dir, "..");
 export const HUMAN: SessionRef = { host: "dot", sessionId: "session-human" };
@@ -44,6 +43,7 @@ export function goalSpec(dir: string, overrides: Partial<CreateGoalInput> = {}):
     stopCriteria: ["stop when the itinerary readback passes", "stop if the budget cap cannot be met"],
     reporting: "Short summary in the conversation with the itinerary path",
     budget: { maxTasks: 5, maxRunsTotal: 5 },
+    request: "user: plan a two-day trip for two with lodging named in itinerary.md",
     ...overrides,
   };
 }
@@ -71,10 +71,4 @@ export function syntheticRepoFiles(): Record<string, string> {
   for (const name of fs.readdirSync(path.join(base, "src")))
     out[`src/${name}`] = fs.readFileSync(path.join(base, "src", name), "utf8");
   return out;
-}
-
-/** Stands in for the user's explicit approval reply to the goal's first revision. */
-export function approveInitial(engine: Engine, goal: Goal): void {
-  const first = goal.revisions.map(approvalPhrase)[0] ?? "";
-  engine.approveCriteria(goal.id, 1, `approved: ${first}`);
 }

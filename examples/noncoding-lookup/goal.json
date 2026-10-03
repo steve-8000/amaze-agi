@@ -1,6 +1,7 @@
 {
   "title": "Choose the pass/fail basis for a site performance report",
   "alias": "report-basis",
+  "request": "User message in this conversation: should our performance report judge pass/fail on lab scores or field data? Decide from the routed source and cite it in decision.md.",
   "scope": "Decide between lab scores and field data for the report's pass/fail line, from the routed source only. No code changes, no executor.",
   "desiredOutcome": "decision.md states the chosen basis and cites the exact source line.",
   "criteria": [

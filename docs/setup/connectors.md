@@ -23,12 +23,14 @@ amaze-agi run verify <run_id>
 Upload and attachment are recorded separately from what the delivering connector reports:
 
 ```sh
-amaze-agi delivery upload <goal> report.md --dest "<DESTINATION_LABEL>" --status succeeded --detail "<reply>" --server-sha256 <hash reported by the store>
-amaze-agi delivery attach <dlv_id> --container "<CONTAINER_LABEL>" --status succeeded --detail "<reply>" --listed
-amaze-agi delivery reconcile <dlv_id> --part upload --found --server-sha256 <hash>
+amaze-agi delivery upload <goal> report.md --dest "<DESTINATION_LABEL>" --status succeeded --detail "<receipt>" [--server-sha256 <hash reported by the store>]
+amaze-agi delivery attach <dlv_id> --container "<CONTAINER_LABEL>" --status succeeded --detail "<receipt>" [--listed]
+amaze-agi delivery reconcile <dlv_id> --part upload (--found [--server-sha256 <hash>] | --not-found)
 ```
 
-- Upload is `verified` only when the store's SHA-256 equals the local bytes; no hash means `unverified`; a different hash means `failed`.
-- Attach is `verified` only with `--listed` (a fresh listing showed the item) and only after a verified upload.
+- The local SHA-256 of the exact bytes identifies the report; keep those bytes unchanged.
+- Upload: `verified` when the store's SHA-256 equals the local bytes, `accepted` on a connector receipt without a hash, `failed` on a different hash. Pass `--server-sha256` only when the store actually returned one; do not download the file back just to re-hash it.
+- Attach (after a verified or accepted upload): `listed` with `--listed` when a fresh listing showed the item, otherwise `accepted` on the connector's receipt.
+- Recipient delivery or view is not observed by the helper; report it only when the recipient or platform confirms it.
 - `unknown` upload or attach must be reconciled before another attempt is recorded.
 - Keep folder IDs, account names and links out of committed files; use labels.

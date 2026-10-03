@@ -19,22 +19,24 @@ export interface Criterion {
   readback: ReadbackSpec;
 }
 
-export interface CriteriaApproval {
-  by: "user";
-  /** Verbatim user confirmation, which must name the revision and its criteria hash prefix. */
-  confirmation: string;
+/** Caller-attested record of the user's words that set a revision; not authentication or execution permission. */
+export interface CriteriaDecision {
+  kind: "user_request" | "user_decision";
+  /** The user's request or reply, quoted or referenced, as relayed by the recording session. */
+  reference: string;
+  recordedBy: SessionRef;
   at: number;
 }
 
 export interface CriteriaRevision {
   revision: number;
   criteria: Criterion[];
-  /** sha256 over the canonical criteria JSON; the user approves exactly this. */
+  /** sha256 over the canonical criteria JSON, so evidence binds to exact criteria. */
   criteriaHash: string;
   reason: string;
   at: number;
   proposedBy: SessionRef;
-  approval?: CriteriaApproval;
+  decision?: CriteriaDecision;
 }
 
 export interface GoalBudget {
@@ -158,14 +160,18 @@ export interface EvidenceReceipt {
   level: EvidenceLevel;
   contentSha256?: string;
   observed?: string;
+  /** Earlier receipt whose observation was re-bound to this revision after an applicability review. */
+  reuses?: EvidenceId;
   recordedAt: number;
   recordedBy: SessionRef;
 }
 
-export type UploadPhase = "verified" | "unverified" | "failed" | "unknown";
-export type AttachPhase = "not_started" | "verified" | "unverified" | "failed" | "unknown";
+/** verified: destination hash equals source bytes; accepted: connector confirmed without a destination hash. */
+export type UploadPhase = "verified" | "accepted" | "failed" | "unknown";
+/** listed: a fresh listing showed the item; accepted: connector confirmed the attachment. */
+export type AttachPhase = "not_started" | "listed" | "accepted" | "failed" | "unknown";
 
-/** Delivery receipt: upload and attachment are separate outcomes, each judged on readback. */
+/** Delivery receipt: source bytes, upload and attachment are separate facts; recipient view is not observed. */
 export interface Delivery {
   id: DeliveryId;
   goalId: GoalId;
