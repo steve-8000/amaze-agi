@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "routes": [
+    {
+      "task_kind": "react-nextjs-performance",
+      "description": "React and Next.js performance work.",
+      "sources": ["10-react-best-practices.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "AGENTS.md",
+        "rules/_sections.md",
+        "rules/_template.md",
+        "rules/advanced-effect-event-deps.md",
+        "rules/advanced-event-handler-refs.md",
+        "rules/advanced-init-once.md",
+        "rules/advanced-use-latest.md",
+        "rules/async-api-routes.md",
+        "rules/async-cheap-condition-before-await.md",
+        "rules/async-defer-await.md",
+        "rules/async-dependencies.md",
+        "rules/async-parallel.md",
+        "rules/async-suspense-boundaries.md",
+        "rules/bundle-analyzable-paths.md",
+        "rules/bundle-barrel-imports.md",
+        "rules/bundle-conditional.md",
+        "rules/bundle-defer-third-party.md",
+        "rules/bundle-dynamic-imports.md",
+        "rules/bundle-preload.md",
+        "rules/client-event-listeners.md",
+        "rules/client-localstorage-schema.md",
+        "rules/client-passive-event-listeners.md",
+        "rules/client-swr-dedup.md",
+        "rules/js-batch-dom-css.md",
+        "rules/js-cache-function-results.md",
+        "rules/js-cache-property-access.md",
+        "rules/js-cache-storage.md",
+        "rules/js-combine-iterations.md",
+        "rules/js-early-exit.md",
+        "rules/js-flatmap-filter.md",
+        "rules/js-hoist-regexp.md",
+        "rules/js-index-maps.md",
+        "rules/js-length-check-first.md",
+        "rules/js-min-max-loop.md",
+        "rules/js-request-idle-callback.md",
+        "rules/js-set-map-lookups.md",
+        "rules/js-tosorted-immutable.md",
+        "rules/rendering-activity.md",
+        "rules/rendering-animate-svg-wrapper.md",
+        "rules/rendering-conditional-render.md",
+        "rules/rendering-content-visibility.md",
+        "rules/rendering-hoist-jsx.md",
+        "rules/rendering-hydration-no-flicker.md",
+        "rules/rendering-hydration-suppress-warning.md",
+        "rules/rendering-resource-hints.md",
+        "rules/rendering-script-defer-async.md",
+        "rules/rendering-svg-precision.md",
+        "rules/rendering-usetransition-loading.md",
+        "rules/rerender-defer-reads.md",
+        "rules/rerender-dependencies.md",
+        "rules/rerender-derived-state-no-effect.md",
+        "rules/rerender-derived-state.md",
+        "rules/rerender-functional-setstate.md",
+        "rules/rerender-lazy-state-init.md",
+        "rules/rerender-memo-with-default-value.md",
+        "rules/rerender-memo.md",
+        "rules/rerender-move-effect-to-event.md",
+        "rules/rerender-no-inline-components.md",
+        "rules/rerender-simple-expression-in-memo.md",
+        "rules/rerender-split-combined-hooks.md",
+        "rules/rerender-transitions.md",
+        "rules/rerender-use-deferred-value.md",
+        "rules/rerender-use-ref-transient-values.md",
+        "rules/server-after-nonblocking.md",
+        "rules/server-auth-actions.md",
+        "rules/server-cache-lru.md",
+        "rules/server-cache-react.md",
+        "rules/server-dedup-props.md",
+        "rules/server-hoist-static-io.md",
+        "rules/server-no-shared-module-state.md",
+        "rules/server-parallel-fetching.md",
+        "rules/server-parallel-nested-fetching.md",
+        "rules/server-serialization.md"
+      ]
+    },
+    {
+      "task_kind": "metal4-api-translation",
+      "description": "Translate graphics APIs to Metal 4.",
+      "sources": ["11-translating-to-metal4-api.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "references/cross-api-translation.md",
+        "references/gpu-queries-and-capabilities.md",
+        "references/tbdr-architecture.md"
+      ]
+    },
+    {
+      "task_kind": "metal4-resources",
+      "description": "Metal 4 resource and memory management.",
+      "sources": ["12-managing-metal4-resources.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "references/heaps-views.md",
+        "references/residency.md",
+        "references/storage-and-upload.md"
+      ]
+    },
+    {
+      "task_kind": "metal4-synchronization",
+      "description": "Metal 4 synchronization.",
+      "sources": ["13-managing-metal4-synchronization.md"],
+      "reasoning_preference": "extra-high"
+    },
+    {
+      "task_kind": "metal4-shader-pipelines",
+      "description": "Metal 4 shader pipeline work.",
+      "sources": ["14-creating-metal4-shader-pipelines.md"],
+      "reasoning_preference": "extra-high"
+    },
+    {
+      "task_kind": "metal-validation",
+      "description": "Metal API validation.",
+      "sources": ["15-using-metal-validation.md"],
+      "reasoning_preference": "extra-high"
+    },
+    {
+      "task_kind": "frontend-visual-design",
+      "description": "Frontend visual design and implementation.",
+      "sources": ["16-frontend-design.md"],
+      "reasoning_preference": "medium"
+    },
+    {
+      "task_kind": "completion-verification",
+      "description": "Evidence-based completion verification.",
+      "sources": ["17-verification-before-completion.md"],
+      "reasoning_preference": "medium"
+    },
+    {
+      "task_kind": "web-accessibility",
+      "description": "Web accessibility implementation and audits.",
+      "sources": ["18-accessibility.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": ["references/A11Y-PATTERNS.md", "references/WCAG.md"]
+    },
+    {
+      "task_kind": "web-performance",
+      "description": "Web performance measurement and optimization.",
+      "sources": ["19-performance.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": ["references/MEASUREMENT.md", "references/RUM.md"]
+    },
+    {
+      "task_kind": "web-quality-audit",
+      "description": "Web quality audits.",
+      "sources": ["20-web-quality-audit.md"],
+      "reasoning_preference": "extra-high"
+    },
+    {
+      "task_kind": "rust",
+      "description": "Rust development.",
+      "sources": ["30-rust-skill.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": ["SKILL_EN.md", "SKILL_ZH.md"]
+    },
+    {
+      "task_kind": "python",
+      "description": "Python development.",
+      "sources": ["31-python-pro.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "references/async-patterns.md",
+        "references/packaging.md",
+        "references/standard-library.md",
+        "references/testing.md",
+        "references/type-system.md"
+      ]
+    },
+    {
+      "task_kind": "typescript",
+      "description": "TypeScript development.",
+      "sources": ["32-typescript-pro.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "references/advanced-types.md",
+        "references/configuration.md",
+        "references/patterns.md",
+        "references/type-guards.md",
+        "references/utility-types.md"
+      ]
+    },
+    {
+      "task_kind": "kubernetes",
+      "description": "Kubernetes engineering.",
+      "sources": ["33-kubernetes-specialist.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "references/configuration.md",
+        "references/cost-optimization.md",
+        "references/custom-operators.md",
+        "references/gitops.md",
+        "references/helm-charts.md",
+        "references/multi-cluster.md",
+        "references/networking.md",
+        "references/service-mesh.md",
+        "references/storage.md",
+        "references/troubleshooting.md",
+        "references/workloads.md"
+      ]
+    },
+    {
+      "task_kind": "docker-build",
+      "description": "Docker image build strategies.",
+      "sources": ["34-docker-build-strategies.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "checks/verification.md",
+        "references/layer-caching.md",
+        "references/multi-stage-builds.md"
+      ]
+    },
+    {
+      "task_kind": "security-review",
+      "description": "Security review tasks.",
+      "sources": ["35-security-reviewer.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "references/infrastructure-security.md",
+        "references/penetration-testing.md",
+        "references/report-template.md",
+        "references/sast-tools.md",
+        "references/secret-scanning.md",
+        "references/vulnerability-patterns.md"
+      ]
+    },
+    {
+      "task_kind": "swift",
+      "description": "Swift development.",
+      "sources": ["37-swift-expert.md"],
+      "reasoning_preference": "extra-high",
+      "nested_documents": [
+        "references/async-concurrency.md",
+        "references/memory-performance.md",
+        "references/protocol-oriented.md",
+        "references/swiftui-patterns.md",
+        "references/testing-patterns.md"
+      ]
+    },
+    {
+      "task_kind": "general-non-coding",
+      "description": "General non-coding tasks do not require third-party coding references.",
+      "sources": [],
+      "reasoning_preference": "medium"
+    },
+    {
+      "task_kind": "simple-web-lookup",
+      "description": "Simple web lookup or short factual research; no vendored coding sources.",
+      "sources": [],
+      "reasoning_preference": "medium"
+    }
+  ],
+  "notes": [
+    "Reasoning preference is a configurable example preference, not an API.",
+    "General non-coding tasks may use no coding sources."
+  ]
+}

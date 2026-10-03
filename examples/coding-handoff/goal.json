@@ -1,0 +1,24 @@
+{
+  "title": "Reject invalid ports in the fixture",
+  "alias": "ports",
+  "scope": "Change only src/port.ts in the fixture repository. Do not edit check.ts.",
+  "desiredOutcome": "parsePort accepts integers 0-65535 and throws for everything else, proven by the existing check.",
+  "criteria": [
+    {
+      "id": "guard",
+      "text": "src/port.ts narrows the input with a type predicate instead of a cast",
+      "readback": { "probe": "file_contains", "path": "src/port.ts", "text": "value is number" }
+    },
+    {
+      "id": "check",
+      "text": "the executor ran `bun check.ts` unchanged at the reported commit and it exited 0",
+      "readback": { "probe": "receipt", "expect": "exit 0 from bun check.ts at the reported commit" }
+    }
+  ],
+  "stopCriteria": [
+    "Stop when both criteria are supported.",
+    "Stop and report if the check cannot pass without editing check.ts."
+  ],
+  "reporting": "One paragraph: commit SHA, check output line, evidence ids.",
+  "budget": { "maxTasks": 1, "maxRunsTotal": 2 }
+}

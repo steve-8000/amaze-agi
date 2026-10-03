@@ -1,0 +1,528 @@
+{
+  "schema_version": 1,
+  "scope": "Public upstream reference-skill metadata only. License and original upstream attribution apply. No installed-capability or transitive-completeness claim.",
+  "skills": [
+    {
+      "skill_id": "vercel-react-best-practices",
+      "domain": "React / Next.js performance",
+      "upstream_repository": "vercel-labs/agent-skills",
+      "upstream_commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "upstream_skill_folder": "skills/react-best-practices",
+      "upstream_skill_url": "https://github.com/vercel-labs/agent-skills/blob/063bee94c3f4df8453406c830b0a7df0f2860278/skills/react-best-practices/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "MIT declared in SKILL.md frontmatter. No LICENSE, NOTICE or COPYING file exists in the pinned repository tree; the full original declaration and notices present in the folder are preserved.",
+      "complete_folder_file_count": 76,
+      "nested_documents_for_routing": [
+        "AGENTS.md",
+        "rules/_sections.md",
+        "rules/_template.md",
+        "rules/advanced-effect-event-deps.md",
+        "rules/advanced-event-handler-refs.md",
+        "rules/advanced-init-once.md",
+        "rules/advanced-use-latest.md",
+        "rules/async-api-routes.md",
+        "rules/async-cheap-condition-before-await.md",
+        "rules/async-defer-await.md",
+        "rules/async-dependencies.md",
+        "rules/async-parallel.md",
+        "rules/async-suspense-boundaries.md",
+        "rules/bundle-analyzable-paths.md",
+        "rules/bundle-barrel-imports.md",
+        "rules/bundle-conditional.md",
+        "rules/bundle-defer-third-party.md",
+        "rules/bundle-dynamic-imports.md",
+        "rules/bundle-preload.md",
+        "rules/client-event-listeners.md",
+        "rules/client-localstorage-schema.md",
+        "rules/client-passive-event-listeners.md",
+        "rules/client-swr-dedup.md",
+        "rules/js-batch-dom-css.md",
+        "rules/js-cache-function-results.md",
+        "rules/js-cache-property-access.md",
+        "rules/js-cache-storage.md",
+        "rules/js-combine-iterations.md",
+        "rules/js-early-exit.md",
+        "rules/js-flatmap-filter.md",
+        "rules/js-hoist-regexp.md",
+        "rules/js-index-maps.md",
+        "rules/js-length-check-first.md",
+        "rules/js-min-max-loop.md",
+        "rules/js-request-idle-callback.md",
+        "rules/js-set-map-lookups.md",
+        "rules/js-tosorted-immutable.md",
+        "rules/rendering-activity.md",
+        "rules/rendering-animate-svg-wrapper.md",
+        "rules/rendering-conditional-render.md",
+        "rules/rendering-content-visibility.md",
+        "rules/rendering-hoist-jsx.md",
+        "rules/rendering-hydration-no-flicker.md",
+        "rules/rendering-hydration-suppress-warning.md",
+        "rules/rendering-resource-hints.md",
+        "rules/rendering-script-defer-async.md",
+        "rules/rendering-svg-precision.md",
+        "rules/rendering-usetransition-loading.md",
+        "rules/rerender-defer-reads.md",
+        "rules/rerender-dependencies.md",
+        "rules/rerender-derived-state-no-effect.md",
+        "rules/rerender-derived-state.md",
+        "rules/rerender-functional-setstate.md",
+        "rules/rerender-lazy-state-init.md",
+        "rules/rerender-memo-with-default-value.md",
+        "rules/rerender-memo.md",
+        "rules/rerender-move-effect-to-event.md",
+        "rules/rerender-no-inline-components.md",
+        "rules/rerender-simple-expression-in-memo.md",
+        "rules/rerender-split-combined-hooks.md",
+        "rules/rerender-transitions.md",
+        "rules/rerender-use-deferred-value.md",
+        "rules/rerender-use-ref-transient-values.md",
+        "rules/server-after-nonblocking.md",
+        "rules/server-auth-actions.md",
+        "rules/server-cache-lru.md",
+        "rules/server-cache-react.md",
+        "rules/server-dedup-props.md",
+        "rules/server-hoist-static-io.md",
+        "rules/server-no-shared-module-state.md",
+        "rules/server-parallel-fetching.md",
+        "rules/server-parallel-nested-fetching.md",
+        "rules/server-serialization.md"
+      ],
+      "unresolved_external_dependencies": [],
+      "mapping_id": "10-react-best-practices"
+    },
+    {
+      "skill_id": "translating-to-metal4-api",
+      "domain": "Metal 4 API translation",
+      "upstream_repository": "apple/game-porting-toolkit",
+      "upstream_commit": "4f42344c90be22112f46becc3fb9687f423f2f88",
+      "upstream_skill_folder": "game-porting-skills/skills/translating-to-metal4-api",
+      "upstream_skill_url": "https://github.com/apple/game-porting-toolkit/blob/4f42344c90be22112f46becc3fb9687f423f2f88/game-porting-skills/skills/translating-to-metal4-api/SKILL.md",
+      "license": "Apache-2.0",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 4,
+      "nested_documents_for_routing": [
+        "references/cross-api-translation.md",
+        "references/gpu-queries-and-capabilities.md",
+        "references/tbdr-architecture.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "skill": "setting-up-macos-window",
+          "status": "Transitive sibling skill not embedded in this source."
+        },
+        {
+          "skill": "using-metalfx-frame-interpolation",
+          "status": "Transitive sibling skill not embedded in this source."
+        }
+      ],
+      "mapping_id": "11-translating-to-metal4-api"
+    },
+    {
+      "skill_id": "managing-metal4-resources",
+      "domain": "Metal 4 resources",
+      "upstream_repository": "apple/game-porting-toolkit",
+      "upstream_commit": "4f42344c90be22112f46becc3fb9687f423f2f88",
+      "upstream_skill_folder": "game-porting-skills/skills/managing-metal4-resources",
+      "upstream_skill_url": "https://github.com/apple/game-porting-toolkit/blob/4f42344c90be22112f46becc3fb9687f423f2f88/game-porting-skills/skills/managing-metal4-resources/SKILL.md",
+      "license": "Apache-2.0",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 4,
+      "nested_documents_for_routing": [
+        "references/heaps-views.md",
+        "references/residency.md",
+        "references/storage-and-upload.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "skill": "setting-up-macos-window",
+          "status": "Transitive sibling skill not embedded in this source."
+        },
+        {
+          "skill": "using-metalfx-frame-interpolation",
+          "status": "Transitive sibling skill not embedded in this source."
+        }
+      ],
+      "mapping_id": "12-managing-metal4-resources"
+    },
+    {
+      "skill_id": "managing-metal4-synchronization",
+      "domain": "Metal 4 synchronization",
+      "upstream_repository": "apple/game-porting-toolkit",
+      "upstream_commit": "4f42344c90be22112f46becc3fb9687f423f2f88",
+      "upstream_skill_folder": "game-porting-skills/skills/managing-metal4-synchronization",
+      "upstream_skill_url": "https://github.com/apple/game-porting-toolkit/blob/4f42344c90be22112f46becc3fb9687f423f2f88/game-porting-skills/skills/managing-metal4-synchronization/SKILL.md",
+      "license": "Apache-2.0",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 1,
+      "nested_documents_for_routing": [],
+      "unresolved_external_dependencies": [],
+      "mapping_id": "13-managing-metal4-synchronization"
+    },
+    {
+      "skill_id": "creating-metal4-shader-pipelines",
+      "domain": "Metal 4 shader pipelines",
+      "upstream_repository": "apple/game-porting-toolkit",
+      "upstream_commit": "4f42344c90be22112f46becc3fb9687f423f2f88",
+      "upstream_skill_folder": "game-porting-skills/skills/creating-metal4-shader-pipelines",
+      "upstream_skill_url": "https://github.com/apple/game-porting-toolkit/blob/4f42344c90be22112f46becc3fb9687f423f2f88/game-porting-skills/skills/creating-metal4-shader-pipelines/SKILL.md",
+      "license": "Apache-2.0",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 1,
+      "nested_documents_for_routing": [],
+      "unresolved_external_dependencies": [],
+      "mapping_id": "14-creating-metal4-shader-pipelines"
+    },
+    {
+      "skill_id": "using-metal-validation",
+      "domain": "Metal validation",
+      "upstream_repository": "apple/game-porting-toolkit",
+      "upstream_commit": "4f42344c90be22112f46becc3fb9687f423f2f88",
+      "upstream_skill_folder": "game-porting-skills/skills/using-metal-validation",
+      "upstream_skill_url": "https://github.com/apple/game-porting-toolkit/blob/4f42344c90be22112f46becc3fb9687f423f2f88/game-porting-skills/skills/using-metal-validation/SKILL.md",
+      "license": "Apache-2.0",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 1,
+      "nested_documents_for_routing": [],
+      "unresolved_external_dependencies": [],
+      "mapping_id": "15-using-metal-validation"
+    },
+    {
+      "skill_id": "frontend-design",
+      "domain": "Frontend visual design",
+      "upstream_repository": "anthropics/skills",
+      "upstream_commit": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
+      "upstream_skill_folder": "skills/frontend-design",
+      "upstream_skill_url": "https://github.com/anthropics/skills/blob/41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f/skills/frontend-design/SKILL.md",
+      "license": "Apache-2.0",
+      "license_evidence": "Apache-2.0; the original folder LICENSE.txt is reproduced in full.",
+      "complete_folder_file_count": 2,
+      "nested_documents_for_routing": [],
+      "unresolved_external_dependencies": [],
+      "mapping_id": "16-frontend-design"
+    },
+    {
+      "skill_id": "verification-before-completion",
+      "domain": "Completion verification",
+      "upstream_repository": "obra/superpowers",
+      "upstream_commit": "8ca22dba9a94f28898bbce59f2537ff4d87c747d",
+      "upstream_skill_folder": "skills/verification-before-completion",
+      "upstream_skill_url": "https://github.com/obra/superpowers/blob/8ca22dba9a94f28898bbce59f2537ff4d87c747d/skills/verification-before-completion/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "MIT; the original repository root LICENSE is reproduced in full.",
+      "complete_folder_file_count": 1,
+      "nested_documents_for_routing": [],
+      "unresolved_external_dependencies": [],
+      "mapping_id": "17-verification-before-completion"
+    },
+    {
+      "skill_id": "accessibility",
+      "domain": "Web accessibility",
+      "upstream_repository": "addyosmani/web-quality-skills",
+      "upstream_commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "upstream_skill_folder": "skills/accessibility",
+      "upstream_skill_url": "https://github.com/addyosmani/web-quality-skills/blob/afa8da942115f2961fdbfa80807ea0b232ff6c00/skills/accessibility/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "MIT; the original repository root LICENSE is reproduced in full.",
+      "complete_folder_file_count": 3,
+      "nested_documents_for_routing": [
+        "references/A11Y-PATTERNS.md",
+        "references/WCAG.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "path": "../web-quality-audit/SKILL.md",
+          "status": "outside this bounded folder; separately packaged as 20-web-quality-audit.md"
+        }
+      ],
+      "mapping_id": "18-accessibility"
+    },
+    {
+      "skill_id": "performance",
+      "domain": "Web performance",
+      "upstream_repository": "addyosmani/web-quality-skills",
+      "upstream_commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "upstream_skill_folder": "skills/performance",
+      "upstream_skill_url": "https://github.com/addyosmani/web-quality-skills/blob/afa8da942115f2961fdbfa80807ea0b232ff6c00/skills/performance/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "MIT; the original repository root LICENSE is reproduced in full.",
+      "complete_folder_file_count": 3,
+      "nested_documents_for_routing": [
+        "references/MEASUREMENT.md",
+        "references/RUM.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "path": "../core-web-vitals/SKILL.md",
+          "status": "not bundled; sibling skill mentioned for specialized Core Web Vitals guidance"
+        }
+      ],
+      "mapping_id": "19-performance"
+    },
+    {
+      "skill_id": "web-quality-audit",
+      "domain": "Web quality audit",
+      "upstream_repository": "addyosmani/web-quality-skills",
+      "upstream_commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "upstream_skill_folder": "skills/web-quality-audit",
+      "upstream_skill_url": "https://github.com/addyosmani/web-quality-skills/blob/afa8da942115f2961fdbfa80807ea0b232ff6c00/skills/web-quality-audit/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "MIT; the original repository root LICENSE is reproduced in full.",
+      "complete_folder_file_count": 2,
+      "nested_documents_for_routing": [],
+      "unresolved_external_dependencies": [
+        {
+          "path": "../performance/SKILL.md",
+          "status": "outside this bounded folder; separately packaged as 19-performance.md"
+        },
+        {
+          "path": "../accessibility/SKILL.md",
+          "status": "outside this bounded folder; separately packaged as 18-accessibility.md"
+        },
+        {
+          "path": "../core-web-vitals/SKILL.md",
+          "status": "not bundled; sibling skill"
+        },
+        {
+          "path": "../seo/SKILL.md",
+          "status": "not bundled; sibling skill"
+        },
+        {
+          "path": "../best-practices/SKILL.md",
+          "status": "not bundled; sibling skill"
+        }
+      ],
+      "mapping_id": "20-web-quality-audit"
+    },
+    {
+      "skill_id": "rust-skill",
+      "domain": "Rust",
+      "upstream_repository": "huiali/rust-skills",
+      "upstream_commit": "947bf77509d9b421035037e983da6662d08cbb8e",
+      "upstream_skill_folder": "skills/rust-skill",
+      "upstream_skill_url": "https://github.com/huiali/rust-skills/blob/947bf77509d9b421035037e983da6662d08cbb8e/skills/rust-skill/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "MIT; the original repository root LICENSE is reproduced in full.",
+      "complete_folder_file_count": 4,
+      "nested_documents_for_routing": [
+        "SKILL_EN.md",
+        "SKILL_ZH.md"
+      ],
+      "unresolved_external_dependencies": [
+        "skills/rust-testing/ (external routing target named in SKILL.md)",
+        "skills/rust-database/ (external routing target named in SKILL.md)",
+        "skills/rust-observability/ (external routing target named in SKILL.md)"
+      ],
+      "mapping_id": "30-rust-skill"
+    },
+    {
+      "skill_id": "python-pro",
+      "domain": "Python",
+      "upstream_repository": "Jeffallan/claude-skills",
+      "upstream_commit": "882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf",
+      "upstream_skill_folder": "skills/python-pro",
+      "upstream_skill_url": "https://github.com/Jeffallan/claude-skills/blob/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf/skills/python-pro/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 6,
+      "nested_documents_for_routing": [
+        "references/async-patterns.md",
+        "references/packaging.md",
+        "references/standard-library.md",
+        "references/testing.md",
+        "references/type-system.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "skill": "fastapi-expert",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "devops-engineer",
+          "status": "Related skill outside this source folder; not embedded."
+        }
+      ],
+      "mapping_id": "31-python-pro"
+    },
+    {
+      "skill_id": "typescript-pro",
+      "domain": "TypeScript",
+      "upstream_repository": "Jeffallan/claude-skills",
+      "upstream_commit": "882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf",
+      "upstream_skill_folder": "skills/typescript-pro",
+      "upstream_skill_url": "https://github.com/Jeffallan/claude-skills/blob/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf/skills/typescript-pro/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 6,
+      "nested_documents_for_routing": [
+        "references/advanced-types.md",
+        "references/configuration.md",
+        "references/patterns.md",
+        "references/type-guards.md",
+        "references/utility-types.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "skill": "fullstack-guardian",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "api-designer",
+          "status": "Related skill outside this source folder; not embedded."
+        }
+      ],
+      "mapping_id": "32-typescript-pro"
+    },
+    {
+      "skill_id": "kubernetes-specialist",
+      "domain": "Kubernetes",
+      "upstream_repository": "Jeffallan/claude-skills",
+      "upstream_commit": "882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf",
+      "upstream_skill_folder": "skills/kubernetes-specialist",
+      "upstream_skill_url": "https://github.com/Jeffallan/claude-skills/blob/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf/skills/kubernetes-specialist/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 12,
+      "nested_documents_for_routing": [
+        "references/configuration.md",
+        "references/cost-optimization.md",
+        "references/custom-operators.md",
+        "references/gitops.md",
+        "references/helm-charts.md",
+        "references/multi-cluster.md",
+        "references/networking.md",
+        "references/service-mesh.md",
+        "references/storage.md",
+        "references/troubleshooting.md",
+        "references/workloads.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "skill": "devops-engineer",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "cloud-architect",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "sre-engineer",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "terraform-engineer",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "security-reviewer",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "chaos-engineer",
+          "status": "Related skill outside this source folder; not embedded."
+        }
+      ],
+      "mapping_id": "33-kubernetes-specialist"
+    },
+    {
+      "skill_id": "docker-build-strategies",
+      "domain": "Docker image builds",
+      "upstream_repository": "docker/skills",
+      "upstream_commit": "3e1cbd179989c2c193f3e4e6553a655907c2003b",
+      "upstream_skill_folder": "skills/docker-build-strategies",
+      "upstream_skill_url": "https://github.com/docker/skills/blob/3e1cbd179989c2c193f3e4e6553a655907c2003b/skills/docker-build-strategies/SKILL.md",
+      "license": "Apache-2.0",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 11,
+      "nested_documents_for_routing": [
+        "checks/verification.md",
+        "references/layer-caching.md",
+        "references/multi-stage-builds.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "skill": "docker-project-foundations",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "docker-compose-patterns",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "docker-destructive-guardrails",
+          "status": "Related skill outside this source folder; not embedded."
+        }
+      ],
+      "mapping_id": "34-docker-build-strategies"
+    },
+    {
+      "skill_id": "security-reviewer",
+      "domain": "Security review",
+      "upstream_repository": "Jeffallan/claude-skills",
+      "upstream_commit": "882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf",
+      "upstream_skill_folder": "skills/security-reviewer",
+      "upstream_skill_url": "https://github.com/Jeffallan/claude-skills/blob/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf/skills/security-reviewer/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 7,
+      "nested_documents_for_routing": [
+        "references/infrastructure-security.md",
+        "references/penetration-testing.md",
+        "references/report-template.md",
+        "references/sast-tools.md",
+        "references/secret-scanning.md",
+        "references/vulnerability-patterns.md"
+      ],
+      "unresolved_external_dependencies": [
+        {
+          "skill": "secure-code-guardian",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "code-reviewer",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "devops-engineer",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "cloud-architect",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "kubernetes-specialist",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "api-designer",
+          "status": "Related skill outside this source folder; not embedded."
+        },
+        {
+          "skill": "mcp-developer",
+          "status": "Related skill outside this source folder; not embedded."
+        }
+      ],
+      "mapping_id": "35-security-reviewer"
+    },
+    {
+      "skill_id": "swift-expert",
+      "domain": "Swift / SwiftUI",
+      "upstream_repository": "Jeffallan/claude-skills",
+      "upstream_commit": "882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf",
+      "upstream_skill_folder": "skills/swift-expert",
+      "upstream_skill_url": "https://github.com/Jeffallan/claude-skills/blob/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf/skills/swift-expert/SKILL.md",
+      "license": "MIT",
+      "license_evidence": "Original repository root LICENSE included.",
+      "complete_folder_file_count": 6,
+      "nested_documents_for_routing": [
+        "references/async-concurrency.md",
+        "references/memory-performance.md",
+        "references/protocol-oriented.md",
+        "references/swiftui-patterns.md",
+        "references/testing-patterns.md"
+      ],
+      "unresolved_external_dependencies": [],
+      "mapping_id": "37-swift-expert"
+    }
+  ]
+}

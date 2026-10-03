@@ -1,0 +1,28 @@
+{
+  "title": "Choose the pass/fail basis for a site performance report",
+  "alias": "report-basis",
+  "scope": "Decide between lab scores and field data for the report's pass/fail line, from the routed source only. No code changes, no executor.",
+  "desiredOutcome": "decision.md states the chosen basis and cites the exact source line.",
+  "criteria": [
+    {
+      "id": "decision",
+      "text": "decision.md states the decision",
+      "readback": { "probe": "file_contains", "path": "decision.md", "text": "Decision: field p75" }
+    },
+    {
+      "id": "citation",
+      "text": "decision.md cites the exact export, nested path and line",
+      "readback": {
+        "probe": "file_contains",
+        "path": "decision.md",
+        "text": "Source: 19-performance.md > SKILL.md:390"
+      }
+    }
+  ],
+  "stopCriteria": [
+    "Stop when both readbacks pass.",
+    "Stop and ask if the source does not settle the question."
+  ],
+  "reporting": "Two sentences in the conversation plus decision.md.",
+  "budget": { "maxTasks": 1, "maxRunsTotal": 1 }
+}

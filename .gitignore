@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+# User-local state and profiles never belong in git.
+.amaze-agi/
+amaze-agi.local.json
+*.local.json
+.env
+.env.*
+artifacts/
+# Local-only archive of superseded prototypes; never published.
+.local-archive/

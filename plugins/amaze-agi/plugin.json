@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "amaze-agi",
+  "version": "0.1.0",
+  "description": "Skills-only operating guidance for dot: bind the goal, plan only useful jobs, retrieve bounded memory and routed sources, execute through existing connectors, and close on evidence.",
+  "license": "MIT",
+  "repository": "https://github.com/steve-8000/amaze-agi",
+  "keywords": ["dot", "goals", "evidence", "research", "memory"]
+}

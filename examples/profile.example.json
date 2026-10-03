@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "chatgptProject": {
+    "label": "<PROJECT_LABEL>",
+    "registeredSources": [
+      {
+        "filename": "33-kubernetes-specialist.md",
+        "sha256": "<SHA256_FROM_amaze-agi_research_plan>",
+        "upstreamCommit": "<UPSTREAM_COMMIT_FROM_amaze-agi_research_plan>",
+        "proof": {
+          "kind": "human_observation",
+          "observedAt": "<YYYY-MM-DD>",
+          "note": "<WHAT_YOU_SAW_IN_THE_PROJECT_SOURCES_LIST>"
+        }
+      }
+    ]
+  },
+  "gbrain": {
+    "enabled": false,
+    "binary": "gbrain",
+    "sourceId": "<GBRAIN_SOURCE_ID>",
+    "maxResults": 5,
+    "snippetChars": 300,
+    "maxBytes": 8000
+  },
+  "readback": {
+    "allowedCommandPrefixes": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "note": "Editable preferences, not facts about availability, entitlement, price or performance. Replace with your own model IDs.",
+  "roles": {
+    "core_design": { "model": "claude-opus-5-5", "thinking": "high" },
+    "supporting_research": { "model": "gpt-6-luna", "thinking": "medium" },
+    "supporting_review": { "model": "claude-sonnet-5-5", "thinking": "medium" },
+    "routine_implementation": { "model": "claude-sonnet-5-5", "thinking": "medium" },
+    "escalation_only_when_justified": { "model": "gpt-6.1-sol", "thinking": "high" }
+  }
+}

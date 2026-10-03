@@ -1,0 +1,7 @@
+{
+  "title": "Replace the cast in parsePort with a type predicate",
+  "alias": "port-guard",
+  "budget": { "maxRuns": 2 },
+  "stopCriteria": ["Stop after two attempts; report the last check output."],
+  "verify": [{ "probe": "file_contains", "path": "src/port.ts", "text": "value is number" }]
+}

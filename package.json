@@ -1,0 +1,33 @@
+{
+  "name": "amaze-agi",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Skills-only dot operating package: goals, bounded memory and routed sources, connector handoffs, evidence-based closure, plus a small evidence helper CLI.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "bun": ">=1.3.0"
+  },
+  "bin": {
+    "amaze-agi": "./bin/amaze-agi.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "biome check .",
+    "test": "bun test test",
+    "e2e": "bun test e2e",
+    "build": "bun build ./bin/amaze-agi.ts --target=bun --outdir=dist --root=.",
+    "sources:fetch": "bun scripts/fetch-upstream.ts",
+    "sources:export": "bun scripts/export-sources.ts",
+    "sources:verify": "bun scripts/verify-sources.ts",
+    "plugin:build": "bun scripts/build-plugin.ts",
+    "plugin:verify": "bun bin/amaze-agi.ts plugin verify",
+    "scan:privacy": "bun scripts/privacy-scan.ts",
+    "check": "bun run typecheck && bun run lint && bun run test && bun run e2e && bun run build && bun run sources:verify && bun run plugin:verify && bun run scan:privacy"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.2",
+    "@types/bun": "1.3.14",
+    "typescript": "5.9.3"
+  }
+}

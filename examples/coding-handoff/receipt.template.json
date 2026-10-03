@@ -1,0 +1,16 @@
+{
+  "criterionId": "check",
+  "criteriaRevision": 1,
+  "run": "<RUN_ID_FROM_run_handoff>",
+  "claimKind": "connector_readback",
+  "claim": "bun check.ts exited 0 at the reported commit",
+  "status": "supported",
+  "level": "read_observed",
+  "observed": "<FIRST_OUTPUT_LINE> at <OBSERVED_AT_ISO8601>",
+  "source": {
+    "kind": "connector",
+    "uri": "<EXECUTOR_RUN_REFERENCE>",
+    "repoSha": "<FULL_40_CHAR_COMMIT_SHA>",
+    "path": "check.ts"
+  }
+}

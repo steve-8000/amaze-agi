@@ -1,0 +1,3 @@
+# Vendored upstream files must keep exact original bytes.
+third_party/** -text -diff linguist-vendored
+project-sources/** -text linguist-generated
