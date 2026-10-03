@@ -19,6 +19,8 @@ To change model or thinking level between phases, use a setting the host actuall
 
 Move between plan, execution, review and delivery with an explicit handoff. A handoff is self-contained: goal and finish line, exact target, inputs and sources, constraints, the existing check to run, and the expected report (result, readback, commit or artifact hash). Record what was sent, to which executor, and when. The receiving phase starts from the handoff, not from the sender's conversation.
 
+Memory stays with the dot coordinator (see [memory.md](memory.md)). The handoff carries a bounded context pack with source, observation date and relevant revision, decisions and constraints, and verification limits. The worker marks what it took from the pack versus what it verified at execution time, and returns material changes, blockers, decisions and evidence to dot. Dot performs and reads back any memory update; a worker report or successful dispatch is not proof it was saved.
+
 ## Outcomes
 
 | Outcome | Next step |

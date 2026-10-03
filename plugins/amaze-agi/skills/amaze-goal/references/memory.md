@@ -32,8 +32,15 @@ Entries without a source or scope are hints, not facts.
 - When something changes, update or supersede the old entry or record rather than adding a contradicting one, and keep the reason.
 - After every write, read it back and confirm it says what was intended. If the readback differs or the write cannot be confirmed, fix it or report it as unsaved.
 
+## Coordinator and workers
+
+- Only the dot coordinator connects to the memory store. It performs memory reads and writes, tracks the source and revision of what it uses, keeps write receipts, and does targeted readback. Workers (OMP and others) do not require or assume direct memory access.
+- Dot gives each worker a bounded context pack: source, observation date and relevant revision for each item, decisions and constraints, and the limits of what has been verified.
+- Workers treat the pack as coordinator-provided context, separate from what they verified themselves at execution time, and return material changes, blockers, decisions and supporting evidence to dot.
+- Dot decides what to save or supersede, performs the write and reads it back. A worker report or a successful dispatch does not prove that memory was persisted.
+
 ## Boundaries
 
 - Personal knowledge stays in the user's private store; this public package contains none.
 - Do not bulk-import mailboxes or chat histories; save what the job produced or what the user asked to keep.
-- Do not rely on background capture or hooks; memory is written deliberately by the job that has the information.
+- Do not rely on background capture or hooks; memory is written deliberately by the dot coordinator from what the job and its workers reported, never by a worker.
